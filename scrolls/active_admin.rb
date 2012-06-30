@@ -1,6 +1,6 @@
 gem 'activeadmin'
 
-after_everything do
+after_bundler do
   generate "active_admin:install"
   inject_into_file "config/application.rb", "\n    config.assets.precompile += ['active_admin.js', 'active_admin.css']", :before => "\n  end"
 end

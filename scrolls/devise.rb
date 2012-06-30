@@ -4,7 +4,15 @@ inject_into_file 'config/environments/development.rb', "\n  config.action_mailer
 inject_into_file 'config/environments/test.rb',        "\n  config.action_mailer.default_url_options = { :host => 'localhost:3000' }\n", :after => "Application.configure do"
 inject_into_file 'config/environments/production.rb',  "\n  config.action_mailer.default_url_options = { :host => '#{app_name}.com' }\n", :after => "Application.configure do"
 
-after_everything do
+if scrolls.include? 'heroku'
+  inject_into_file 'config/application.rb', "\n    # Force application to not access DB or load models when precompiling your assets (Devise+heroku recommended)\n    config.assets.initialize_on_precompile = false\n", :after => "class Application < Rails::Application"
+end
+
+unless scrolls.include? 'rails_basics'
+  route "root :to => 'home#index'"
+end
+
+after_bundler do
   generate 'devise:install' unless scrolls.include? 'active_admin'
 
   if scrolls.include? 'mongo_mapper'
