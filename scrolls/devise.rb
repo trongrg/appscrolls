@@ -13,7 +13,7 @@ unless scrolls.include? 'rails_basics'
 end
 
 after_bundler do
-  generate 'devise:install' unless scrolls.include? 'active_admin'
+  generate 'devise:install'
 
   if scrolls.include? 'mongo_mapper'
     gem 'mm-devise'
