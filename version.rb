@@ -1,3 +1,3 @@
-module AppScrollsScrolls
+module AppScrolls
   VERSION = "0.11.2"
 end

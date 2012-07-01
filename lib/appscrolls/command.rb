@@ -1,9 +1,15 @@
 require 'appscrolls'
 require 'thor'
 
-module AppScrollsScrolls
+module AppScrolls
   class Command < Thor
     include Thor::Actions
+
+    desc "version", "show version of currently installed AppScrolls gem"
+    def version
+      puts "AppScrolls version #{AppScrolls::VERSION} ready to make magic."
+    end
+
     desc "new APP_NAME", "create a new Rails app"
     method_option :scrolls, :type => :array, :aliases => "-s", :desc => "List scrolls, e.g. -s resque rails_basics jquery"
     method_option :template, :type => :boolean, :aliases => "-t", :desc => "Only display template that would be used"
@@ -19,7 +25,7 @@ module AppScrollsScrolls
             @scrolls.delete(scroll)
             puts
             puts "> #{yellow}Removed '#{scroll}' from template.#{clear}"
-          elsif AppScrollsScrolls::Scrolls.list.include?(scroll)
+          elsif AppScrolls::Scrolls.list.include?(scroll)
             @scrolls << scroll
             puts
             puts "> #{green}Added '#{scroll}' to template.#{clear}"
@@ -36,9 +42,9 @@ module AppScrollsScrolls
     desc "list [CATEGORY]", "list available scrolls (optionally by category)"
     def list(category = nil)
       if category
-        scrolls = AppScrollsScrolls::Scrolls.for(category).map{|r| AppScrollsScrolls::Scroll.from_mongo(r) }
+        scrolls = AppScrolls::Scrolls.for(category).map{|r| AppScrolls::Scroll.from_mongo(r) }
       else
-        scrolls = AppScrollsScrolls::Scrolls.list_classes
+        scrolls = AppScrolls::Scrolls.list_classes
       end
 
       scrolls.each do |scroll|
@@ -60,7 +66,7 @@ module AppScrollsScrolls
           message << "#{green}#{bold}Your Scrolls:#{clear} #{@scrolls.join(", ")}"
           message << "\n\n"
         end
-        available_scrolls = AppScrollsScrolls::Scrolls.list - @scrolls
+        available_scrolls = AppScrolls::Scrolls.list - @scrolls
         if available_scrolls.any?
           message << "#{bold}#{cyan}Available Scrolls:#{clear} #{available_scrolls.join(', ')}"
           message << "\n\n"
@@ -74,7 +80,9 @@ module AppScrollsScrolls
         puts "#{bold}Generating and Running Template...#{clear}"
         puts
         file = Tempfile.new('template')
-        template = AppScrollsScrolls::Template.new(scrolls)
+        template_options = {}
+        template_options[:config_script] = File.read(options[:config_file]) if options[:config_file]
+        template = AppScrolls::Template.new(scrolls)
 
         puts "Using the following scrolls:"
         template.resolve_scrolls.map do |scroll|

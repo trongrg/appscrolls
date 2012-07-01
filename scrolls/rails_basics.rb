@@ -53,5 +53,4 @@ __END__
 name: Rails Basics
 description: Best practices for new Rails apps
 author: drnic
-
 run_before: [git]
