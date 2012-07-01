@@ -7,6 +7,7 @@ after_bundler do
   # clean up rails defaults
   remove_file "public/index.html"
   remove_file "public/images/rails.png"
+  remove_file "app/assets/images/rails.png"
   generate "controller home index"
   gsub_file "app/controllers/home_controller.rb", /def index/, <<-RUBY
 def index
