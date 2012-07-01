@@ -1,11 +1,11 @@
-module AppScrollsScrolls
+module AppScrolls
   class Template
     attr_reader :scrolls, :unknown_scroll_names
 
     def initialize(scrolls)
       @unknown_scroll_names = []
       @scrolls = scrolls.inject([]) do |list, name|
-        scroll = AppScrollsScrolls::Scroll.from_mongo(name)
+        scroll = AppScrolls::Scroll.from_mongo(name)
         if scroll
           list << scroll
         else
@@ -32,7 +32,7 @@ module AppScrollsScrolls
     end
 
     def scroll_classes
-      @scroll_classes ||= scrolls.map { |name| AppScrollsScrolls::Scroll.from_mongo(name) }
+      @scroll_classes ||= scrolls.map { |name| AppScrolls::Scroll.from_mongo(name) }
     end
 
     def scrolls_with_dependencies
@@ -41,7 +41,7 @@ module AppScrollsScrolls
       added_more = false
       for scroll in scroll_classes
         scroll.requires.each do |requirement|
-          requirement = AppScrollsScrolls::Scroll.from_mongo(requirement)
+          requirement = AppScrolls::Scroll.from_mongo(requirement)
           count = @scrolls_with_dependencies.size
           (@scrolls_with_dependencies << requirement).uniq!
           unless @scrolls_with_dependencies.size == count
