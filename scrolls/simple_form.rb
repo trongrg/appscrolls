@@ -1,4 +1,5 @@
 gem 'simple_form'
+gem 'country_select'
 
 after_bundler do
   if scroll?("twitter_bootstrap") || scroll?("bootstrap-sass")
