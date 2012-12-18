@@ -13,17 +13,24 @@ after_everything do
     generate 'mongo_mapper:devise User'
   elsif scrolls.include? 'mongoid'
     gsub_file 'config/initializers/devise.rb', 'devise/orm/active_record', 'devise/orm/mongoid'
-  end      
+  end
 
   generate 'devise user'
   generate "devise:views"
-  
+
   unless scrolls.include? 'rails_basics'
     route "root :to => 'home#index'"
   end
 
   if scrolls.include? 'heroku'
     inject_into_file 'config/environments/application.rb', "\n# Force application to not access DB or load models when precompiling your assets (Devise+heroku recommended)\nconfig.assets.initialize_on_precompile = false\n", :after => "class Application < Rails::Application"
+  end
+
+  if scroll? 'haml'
+    gem 'hpricot', :group => :development
+    gem 'ruby_parser', :group => :development
+    run 'bundle install'
+    run "for i in `find app/views/devise -name '*.erb'` ; do html2haml -e $i ${i%erb}haml ; rm $i ; done"
   end
 end
 
@@ -35,3 +42,5 @@ author: mbleigh
 
 category: authentication
 exclusive: authentication
+
+run_after: [haml, rvm]
