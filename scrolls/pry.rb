@@ -1,6 +1,6 @@
-gem 'pry-rails', :group => :development
-gem 'pry-nav', :group => :development
-gem 'awesome_print', :group => :development
+gem 'pry-rails', :group => [:development, :test]
+gem 'pry-nav', :group => [:development, :test]
+gem 'awesome_print', :group => [:development, :test]
 
 __END__
 
