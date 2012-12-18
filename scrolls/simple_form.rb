@@ -1,7 +1,7 @@
 gem 'simple_form'
 
 after_bundler do
-  if scroll?("twitter_bootstrap") || scroll?("compass_twitter_bootstrap")
+  if scroll?("twitter_bootstrap") || scroll?("bootstrap-sass")
     generate "simple_form:install --bootstrap"
   else
     generate "simple_form:install"
@@ -15,5 +15,5 @@ description: Install Simple Form to generate nicely formatted forms.
 author: jonochang
 website: https://github.com/plataformatec/simple_form
 
-exclusive: forms 
+exclusive: forms
 category: templating
