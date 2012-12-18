@@ -1,4 +1,4 @@
-gem 'bootstrap-sass', '~> 2.2.1.1'
+gem 'bootstrap-sass', '~> 2.2.1.1', :group => :assets
 
 after_bundler do
   create_file "app/assets/stylesheets/app_bootstrap.css.scss", <<-SCSS
@@ -8,14 +8,15 @@ after_bundler do
 // change grid
 //$gridColumnWidth: 70px;
 //$gridGutterWidth: 10px;
-  @import "bootstrap";
+@import "bootstrap";
 SCSS
 
-  append_file "app/assets/stylesheets/application.css", <<-CSS
-  //= require app_bootstrap
+  append_file "app/assets/stylesheets/application.css.scss", <<-CSS
+@import "app_bootstrap";
 CSS
+
   append_file "app/assets/javascripts/application.js", <<-JS
-  //= require bootstrap
+//= require bootstrap
 JS
 
   if File.exists? "app/views/layouts/application.html.erb"
@@ -28,7 +29,7 @@ JS
         </div>
       <% end %>
 HTML
-  elsif File.exists "app/views/layouts/application.html.haml"
+  elsif File.exists? "app/views/layouts/application.html.haml"
   gsub_file "app/views/layouts/application.html.haml", /%body/, %q{
   %body
     #flash
@@ -49,9 +50,7 @@ description:
 website:
 author: trongtran
 
-requires: []
-run_after: []
-run_before: []
+run_after: [haml, sass]
 
 category: css # authentication, testing, persistence, javascript, css, services, deployment, and templating
 # exclusive:
@@ -60,3 +59,4 @@ category: css # authentication, testing, persistence, javascript, css, services,
 #   - foo:
 #       type: boolean
 #       prompt: "Is foo true?"
+
