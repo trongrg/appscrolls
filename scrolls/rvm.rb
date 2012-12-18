@@ -1,13 +1,12 @@
-# run "rvm use 1.9.3 exec rvm gemset create #{config['gemset']}"
+before_everything do
+  gemset = config['gemset'].present? ? config['gemset'] : app_name
+  create_file '.rvmrc', <<-END
+  rvm use 1.9.3@#{gemset} --create
+  END
 
-create_file '.rvmrc', <<-END
-rvm use 1.9.3@#{config['gemset']}
-#{"git status -sb" if scrolls.include?('git') }
-END
-
-# run "rvm 1.9.3 do gem install bundler --pre"
-
-run 'rvm rvmrc trust .'
+  run 'rvm rvmrc trust .'
+  run 'source .rvmrc'
+end
 
 __END__
 name: RVM
