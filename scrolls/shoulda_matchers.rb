@@ -1,4 +1,5 @@
-gem 'shoulda-matchers', :group => [:test]
+gem 'shoulda', :group => :test
+gem 'shoulda-matchers', :group => :test
 
 __END__
 
