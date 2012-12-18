@@ -1,9 +1,14 @@
 gem 'haml-rails'
 
+inject_into_file "config/initializers/generators.rb", :after => "Rails.application.config.generators do |g|\n" do
+  "    g.template_engine :haml\n"
+end
+
 after_everything do
-  create_file 'app/views/layouts/application.html.haml', <<-END
-!!! 5
-%html{html_attrs}
+  remove_file "app/views/layouts/application.html.erb"
+  create_file "app/views/layouts/application.html.haml", <<-RUBY
+!!!
+%html
   %head
     %meta{:charset => 'utf-8'}
     %title #{app_name}
@@ -11,14 +16,8 @@ after_everything do
     = stylesheet_link_tag "application", :media => "all"
     = javascript_include_tag "application"
   %body
-    .container
-      - flash.each do |name, msg| 
-        .alert{:class => "alert-\#{name == :alert ? "error" : "success"}"}
-          %a.close{:"data-dismiss" => "alert"} ×
-          != msg
-      = yield
-END
-  run 'rm app/views/layouts/application.html.erb'
+    = yield
+  RUBY
 end
 
 __END__
