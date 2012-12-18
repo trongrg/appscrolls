@@ -4,7 +4,7 @@ inject_into_file "config/initializers/generators.rb", :after => "Rails.applicati
   "    g.template_engine :haml\n"
 end
 
-after_everything do
+after_bundler do
   remove_file "app/views/layouts/application.html.erb"
   create_file "app/views/layouts/application.html.haml", <<-RUBY
 !!!
