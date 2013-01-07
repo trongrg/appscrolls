@@ -24,3 +24,5 @@ author: mbleigh
 
 category: assets
 tags: [css, stylesheet]
+
+run_before: [bootstrap-sass]
