@@ -1,4 +1,8 @@
 gem 'devise'
+if scroll? 'haml'
+  gem 'hpricot', :group => :development
+  gem 'ruby_parser', :group => :development
+end
 
 inject_into_file 'config/environments/development.rb', "\n  config.action_mailer.default_url_options = { :host => 'localhost', :port => 3000 }\n", :after => "Application.configure do"
 inject_into_file 'config/environments/test.rb',        "\n  config.action_mailer.default_url_options = { :host => 'localhost', :port => 3000 }\n", :after => "Application.configure do"
@@ -27,9 +31,6 @@ after_everything do
   end
 
   if scroll? 'haml'
-    gem 'hpricot', :group => :development
-    gem 'ruby_parser', :group => :development
-    run 'bundle install'
     run "for i in `find app/views/devise -name '*.erb'` ; do html2haml -e $i ${i%erb}haml ; rm $i ; done"
   end
 end
