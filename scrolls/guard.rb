@@ -45,6 +45,14 @@ after_bundler do
   run "bundle exec guard init #{KNOWN_GUARD.join(" ")}"
 end
 
+after_everything do
+  if scroll? 'spork'
+    gsub_file 'Guardfile', "guard 'cucumber' do", "guard 'cucumber', :cli => '--drb' do"
+    gsub_file 'Guardfile', "guard 'rspec' do", "guard 'rspec', :cli => '--drb' do"
+    gsub_file 'Guardfile', "watch(%r{features/support/}) { :cucumber }", "watch('features/support/env.rb') { :cucumber }"
+    inject_into_file 'Guardfile', "\n  watch('app/controllers/application_controller.rb')", :after => "watch('features/support/env.rb') { :cucumber }"
+  end
+end
 
 __END__
 
