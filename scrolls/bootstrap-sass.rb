@@ -1,4 +1,4 @@
-gem 'bootstrap-sass', '~> 2.2.1.1', :group => :assets
+gem 'bootstrap-sass', '~> 2.2.2.0', :group => :assets
 
 after_bundler do
   create_file "app/assets/stylesheets/app_bootstrap.css.scss", <<-SCSS
