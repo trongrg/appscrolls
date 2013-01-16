@@ -14,7 +14,7 @@ def index
     flash.now[:notice] = "Welcome! - love App Scrolls"
 RUBY
   route "root :to => 'home#index'"
-  
+
   run "mv README.rdoc RAILS_README.rdoc"
   remove_file "README.rdoc"
   create_file "README.md", <<-README
@@ -40,8 +40,9 @@ README
   if scrolls.include? 'git'
     append_file ".gitignore", "\nconfig/database.yml"
     append_file ".gitignore", "\npublic/system"
+    append_file ".gitignore", "\n.rvmrc"
   end
-  
+
 end
 
 after_everything do
