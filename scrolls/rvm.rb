@@ -1,7 +1,7 @@
 before_everything do
   gemset = config['gemset'].present? ? config['gemset'] : app_name
   create_file '.rvmrc', <<-END
-  rvm use 1.9.3@#{gemset} --create
+  rvm use 2.0.0@#{gemset} --create
   END
 
   run 'rvm rvmrc trust .'
