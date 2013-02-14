@@ -5,8 +5,8 @@ gem 'awesome_print', :group => [:development, :test]
 __END__
 
 name: Pry
-description:
-website:
+description: Use pry for rails console and debugger
+website: http://pryrepl.org/
 author: trongtran
 
 category: other # authentication, testing, persistence, javascript, css, services, deployment, and templating

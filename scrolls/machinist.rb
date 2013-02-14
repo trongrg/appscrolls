@@ -10,8 +10,8 @@ end
 __END__
 
 name: Machinist
-description:
-website:
+description: Makes it easy to create objects for use in tests
+website: https://github.com/notahat/machinist
 author: trongtran
 
 requires: []

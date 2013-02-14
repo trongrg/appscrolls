@@ -5,11 +5,11 @@ require 'spec_helper'
 
 AppScrolls::Scrolls.list_classes.each do |scroll|
   describe scroll do
-    it("should have a name"){ scroll.name.should be_kind_of(String) }    
-    it("should have a description"){ scroll.description.should be_kind_of(String) }
-    it("should have a template"){ scroll.template.should be_kind_of(String) }
-    it("should be able to compile"){ scroll.new.compile.should be_kind_of(String) }
-    
+    it("#{scroll.name} should have a name"){ scroll.name.should be_kind_of(String) }
+    it("#{scroll.name} should have a description"){ scroll.description.should be_kind_of(String) }
+    it("#{scroll.name} should have a template"){ scroll.template.should be_kind_of(String) }
+    it("#{scroll.name} should be able to compile"){ scroll.new.compile.should be_kind_of(String) }
+
     it "should have a string or nil category" do
       if scroll.category
         scroll.category.should be_kind_of(String)

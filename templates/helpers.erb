@@ -106,40 +106,25 @@ module Rails::Generators::Actions
     log :gemfile, "group #{name}"
 
     in_root do
-      if group_exists?(name)
-        regex = /(group #{name} do((?!end).)*)\nend/m
-        content = File.read("Gemfile").match(regex)[1]
-        gsub_file "Gemfile",regex , ""
+      regex = /\n(group #{name} do((?!end).)*)\nend/m
+      if match = File.read("Gemfile").match(regex)
+        content = match[1]
+        gsub_file "Gemfile", regex, ""
         append_file "Gemfile", content
-
-        @in_group = true
-        instance_eval(&block)
-        @in_group = false
-        append_file "Gemfile", "\nend\n", :force => true
       else
         append_file "Gemfile", "\ngroup #{name} do", :force => true
-
-        @in_group = true
-        instance_eval(&block)
-        @in_group = false
-
-        append_file "Gemfile", "\nend\n", :force => true
       end
+      @in_group = true
+      instance_eval(&block)
+      @in_group = false
+      append_file "Gemfile", "\nend\n", :force => true
     end
-  end
-
-  def group_exists?(name)
-    File.read('Gemfile').include?("group #{name} do")
   end
 
   def gem(*args)
     options = args.extract_options!
     name, version = args
     if group = options.delete(:group)
-      require 'rubygems'
-      require 'pry'
-      require 'pry-nav'
-      binding.pry if group == :test
       gem_group group do
         gem name, version, options
       end

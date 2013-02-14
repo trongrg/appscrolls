@@ -41,7 +41,7 @@ name: This is an Example
 description: You know it's an exmaple.
 RUBY
         scroll = AppScrolls::Scroll.generate('just_a_test', file)
-        scroll.template.should == '# this is an example'        
+        scroll.template.should == '# this is an example'
         scroll.category.should == 'example'
         scroll.name.should == 'This is an Example'
       end
@@ -69,33 +69,33 @@ RUBY
 
   it 'should set default attributes' do
     scroll = AppScrolls::Scroll.generate('abc','# test')
-    
+
     AppScrolls::Scroll::DEFAULT_ATTRIBUTES.each_pair do |k,v|
       scroll.send(k).should == v
     end
   end
 
-  context 'Comparable' do
-    subject{ AppScrolls::Scroll }
-    it 'a < b.run_after(a)' do
-      A = subject.generate('a', '#')
-      B = subject.generate('b', '#', :run_after => ['a'])
+  # context 'Comparable' do
+  #   subject{ AppScrolls::Scroll }
+  #   it 'a < b.run_after(a)' do
+  #     A = subject.generate('a', '#')
+  #     B = subject.generate('b', '#', :run_after => ['a'])
 
-      (A < B).should be_true
-    end
+  #     (A < B).should be_true
+  #   end
 
-    it 'a > b.run_before(a)' do
-      A = subject.generate('a', '#')
-      B = subject.generate('b', '#', :run_before => ['a'])
-      
-      (A > B).should be_true
-    end
+  #   it 'a > b.run_before(a)' do
+  #     A = subject.generate('a', '#')
+  #     B = subject.generate('b', '#', :run_before => ['a'])
 
-    after do
-      Object.send :remove_const, :A if defined?(A)
-      Object.send :remove_const, :B if defined?(B)
-    end
-  end
+  #     (A > B).should be_true
+  #   end
+
+  #   after do
+  #     Object.send :remove_const, :A if defined?(A)
+  #     Object.send :remove_const, :B if defined?(B)
+  #   end
+  # end
 end
 
 __END__
