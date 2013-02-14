@@ -99,3 +99,57 @@ module ConfigMapper
   end
 end
 config.extend ConfigMapper
+
+module Rails::Generators::Actions
+  def gem_group(*names, &block)
+    name = names.flatten.map(&:inspect).join(", ")
+    log :gemfile, "group #{name}"
+
+    in_root do
+      regex = /(group #{name} do((?!end).)*)\nend/m
+      if match = File.read("Gemfile").match(regex)
+        gsub_file "Gemfile", regex , ""
+        append_file "Gemfile", match[1]
+      else
+        append_file "Gemfile", "\ngroup #{name} do", :force => true
+      end
+      @in_group = true
+      instance_eval(&block)
+      @in_group = false
+      append_file "Gemfile", "\nend\n", :force => true
+    end
+  end
+
+  def gem(*args)
+    options = args.extract_options!
+    name, version = args
+    if group = options.delete(:group)
+      gem_group group do
+        gem name, version, options
+      end
+    else
+      # Set the message to be shown in logs. Uses the git repo if one is given,
+      # otherwise use name (version).
+      parts, message = [ name.inspect ], name
+
+      if version ||= options.delete(:version)
+        parts   << version.inspect
+        message << " (#{version})"
+      end
+      message = options[:git] if options[:git]
+
+      log :gemfile, message
+
+      options.each do |option, value|
+        parts << ":#{option} => #{value.inspect}"
+      end
+
+      in_root do
+        str = "gem #{parts.join(", ")}"
+        str = "  " + str if @in_group
+        str = "\n" + str
+        append_file "Gemfile", str, :verbose => false
+      end
+    end
+  end
+end
