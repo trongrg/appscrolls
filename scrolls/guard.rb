@@ -1,19 +1,26 @@
 require 'rbconfig'
 HOST_OS = RbConfig::CONFIG['host_os']
 
-append_file 'Gemfile', "\nguard_notifications = #{config['guard_notifications'].inspect}\n"
-
-case HOST_OS
-when /darwin/i
-  gem 'rb-fsevent', :group => :development
-  append_file 'Gemfile', "\ngem 'ruby_gntp', :group => :development if guard_notifications\n"
-when /linux/i
-  gem 'libnotify', :group => :development
-  gem 'rb-inotify', :group => :development
-when /mswin|windows/i
-  gem 'rb-fchange', :group => :development
-  gem 'win32console', :group => :development
-  append_file 'Gemfile', "\ngem 'rb-notifu' if guard_notifications\n"
+if config['guard_notifications']
+  gem_group :development do
+    case HOST_OS
+    when /darwin/i
+      gem 'rb-fsevent'
+      mac_osx_version  = /(10\.\d+)(\.\d+)?/.match(`/usr/bin/sw_vers -productVersion`.chomp).captures.first.to_f
+      if 10.8 <= mac_osx_version # Actually Mountain Lion or newer
+        gem 'terminal-notifier-guard'
+      else
+        gem 'ruby_gntp'
+      end
+    when /linux/i
+      gem 'libnotify'
+      gem 'rb-inotify'
+    when /mswin|windows/i
+      gem 'rb-fchange'
+      gem 'win32console'
+      gem 'rb-notifu'
+    end
+  end
 end
 
 
@@ -29,7 +36,7 @@ gem_group :development do
   gem 'yajl-ruby'
   gem 'rack-livereload'
 
-# Guard for other Scrolls
+  # Guard for other Scrolls
 
   gem 'guard-bundler'
   gem 'guard-test' if scrolls.include? 'test_unit'
