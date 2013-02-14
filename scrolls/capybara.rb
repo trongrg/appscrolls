@@ -1,4 +1,4 @@
-gem 'capybara', :group => [:development, :test]
+gem 'capybara', :group => [:test]
 
 after_bundler do
   create_file "spec/support/capybara.rb", <<-RUBY
@@ -6,19 +6,13 @@ require 'capybara/rails'
 require 'capybara/rspec'
 RUBY
 
-  create_file "spec/requests/home_spec.rb", <<-RUBY
-require 'spec_helper'
-
-describe 'visiting the homepage' do
-  before do
-    visit '/'
-  end
-
-  it 'should have a body' do
-    page.should have_css('body')    
-  end
-end
+  if scroll?("cucumber")
+    create_file "features/support/capybara.rb", <<-RUBY
+require 'capybara/rails'
+require 'capybara/cucumber'
+require 'capybara/session'
 RUBY
+  end
 end
 
 __END__
@@ -28,7 +22,7 @@ description: "Use the Capybara acceptance testing libraries with RSpec."
 author: mbleigh
 
 requires: [rspec]
-run_after: [rspec] 
-exclusive: acceptance_testing 
+run_after: [rspec, cucumber]
+exclusive: acceptance_testing
 category: testing
 tags: [acceptance]
