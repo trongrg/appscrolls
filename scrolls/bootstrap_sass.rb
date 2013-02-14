@@ -46,17 +46,12 @@ end
 __END__
 
 name: Bootstrap-sass
-description:
-website:
+description: Use Sass-powered twitter-bootstrap
+website: https://github.com/thomas-mcdonald/bootstrap-sass
 author: trongtran
 
+requires: [sass]
 run_after: [haml, sass]
 
-category: css # authentication, testing, persistence, javascript, css, services, deployment, and templating
-# exclusive:
-
-# config:
-#   - foo:
-#       type: boolean
-#       prompt: "Is foo true?"
-
+category: assets
+tag: [css, stylesheets, javascripts]
