@@ -56,8 +56,9 @@ def define_callback(name)
 end
 
 def execute_callbacks name
-  say_wizard "Running #{name} callbacks."  
+  say_wizard "Running #{name} callbacks."
   instance_variable_get("@#{name}_blocks").each do |current_scroll, block|
+    say_wizard "Running #{current_scroll} #{name} callbacks"
     @current_scroll = current_scroll
     block.call
     git_commit("recipe : #{current_scroll} (#{name})") if @scrolls.include?('git')
