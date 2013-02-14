@@ -2,6 +2,7 @@ require 'appscrolls/scrolls'
 require 'appscrolls/scroll'
 require 'appscrolls/config'
 require 'appscrolls/template'
+require 'appscrolls/sorter'
 
 def enroll_scroll_at(path)
   key = File.basename(path, '.rb')
