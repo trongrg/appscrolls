@@ -1,7 +1,7 @@
 gem 'compass-rails', :group => :assets
 
 after_bundler do
-  append_file "app/assets/stylesheets/application.css.scss", <<-SCSS
+  prepend_file "app/assets/stylesheets/application.css.scss", <<-SCSS
 // Import compass
 @import "compass";
 SCSS
