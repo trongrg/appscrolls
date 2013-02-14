@@ -46,8 +46,8 @@ end
 __END__
 
 name: Bootstrap-sass
-description:
-website:
+description: Use Sass-powered twitter-bootstrap
+website: https://github.com/thomas-mcdonald/bootstrap-sass
 author: trongtran
 
 run_after: [haml, sass]
