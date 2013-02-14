@@ -1,14 +1,14 @@
 gem "mysql2"
 
 after_bundler do
-  rake "db:create:all"
-  
+  rake "db:create"
+
   rakefile("sample.rake") do
 <<-RUBY
 namespace :db do
   desc "Populate the database with sample data"
   task :sample => :environment do
-    
+
   end
   task :populate => :sample
 end
