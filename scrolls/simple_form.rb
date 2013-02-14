@@ -2,7 +2,7 @@ gem 'simple_form'
 gem 'country_select'
 
 after_bundler do
-  if scroll?("twitter_bootstrap") || scroll?("bootstrap-sass")
+  if scroll?("twitter_bootstrap") || scroll?("bootstrap_sass")
     generate "simple_form:install --bootstrap"
   else
     generate "simple_form:install"
