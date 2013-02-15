@@ -7,7 +7,7 @@ end
 
 after_bundler do
   rake "db:create"
-  generate "cucumber:install --capybara#{' --rspec' if scrolls.include?('rspec')}#{' -D' unless scrolls.include?('activerecord')}"
+  generate "cucumber:install --capybara#{' --rspec' if scroll?('rspec')}#{' -D' unless scroll?('activerecord')}"
 end
 
 __END__
@@ -16,6 +16,6 @@ name: Cucumber
 description: "Use Cucumber for integration testing with Capybara."
 author: mbleigh
 
-exclusive: acceptance_testing 
+exclusive: acceptance_testing
 category: testing
 tags: [acceptance]

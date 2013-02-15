@@ -37,7 +37,7 @@ The project was created with the following scrolls:
 
 README
 
-  if scrolls.include? 'git'
+  if scroll? 'git'
     append_file ".gitignore", "\nconfig/database.yml"
     append_file ".gitignore", "\npublic/system"
     append_file ".gitignore", "\n.rvmrc"

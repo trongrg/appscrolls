@@ -31,8 +31,8 @@ end
 
 
   run "ln -s `bundle show compass_twitter_bootstrap`/stylesheets app/assets/stylesheets/bootstrap"
-  append_file ".gitignore", "\napp/assets/stylesheets/bootstrap" if scrolls.include? 'git'
-  
+  append_file ".gitignore", "\napp/assets/stylesheets/bootstrap" if scroll? 'git'
+
 __END__
 
 name: Compass Twitter Bootstrap Rails (Sass)

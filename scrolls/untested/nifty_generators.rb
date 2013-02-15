@@ -1,8 +1,8 @@
 gem "nifty-generators"
 after_bundler do
   remove_file 'app/views/layouts/application.html.erb' # use nifty layout instead
-  
-  if scrolls.include? 'haml'
+
+  if scroll? 'haml'
     generate 'nifty:layout --haml'
   else
     generate 'nifty:layout'

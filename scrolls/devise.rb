@@ -9,24 +9,24 @@ inject_into_file 'config/environments/test.rb',        "\n  config.action_mailer
 inject_into_file 'config/environments/production.rb',  "\n  config.action_mailer.default_url_options = { :host => '#{app_name}.com' }\n", :after => "Application.configure do"
 
 after_everything do
-  generate 'devise:install' unless scrolls.include? 'active_admin'
+  generate 'devise:install' unless scroll? 'active_admin'
 
-  if scrolls.include? 'mongo_mapper'
+  if scroll? 'mongo_mapper'
     gem 'mm-devise'
     gsub_file 'config/initializers/devise.rb', 'devise/orm/', 'devise/orm/mongo_mapper_active_model'
     generate 'mongo_mapper:devise User'
-  elsif scrolls.include? 'mongoid'
+  elsif scroll? 'mongoid'
     gsub_file 'config/initializers/devise.rb', 'devise/orm/active_record', 'devise/orm/mongoid'
   end
 
   generate 'devise user'
   generate "devise:views"
 
-  unless scrolls.include? 'rails_basics'
+  unless scroll? 'rails_basics'
     route "root :to => 'home#index'"
   end
 
-  if scrolls.include? 'heroku'
+  if scroll? 'heroku'
     inject_into_file 'config/application.rb', "\n    # Force application to not access DB or load models when precompiling your assets (Devise+heroku recommended)\n    config.assets.initialize_on_precompile = false\n", :after => "class Application < Rails::Application"
   end
 
