@@ -1,4 +1,4 @@
-append_file 'Gemfile', "\ngem 'spork', :git => 'git://github.com/sporkrb/spork.git'"
+gem 'spork', '~> 1.0rc'
 
 after_bundler do
   run "bundle exec spork --bootstrap"
