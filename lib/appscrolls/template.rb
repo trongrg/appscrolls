@@ -24,8 +24,10 @@ module AppScrolls
       erb = ERB.new(File.open(template_root + '/' + template_name + '.erb').read)
       erb.result(binding)
     end
-    def render(template_name, binding = nil); self.class.render(template_name, binding) end
 
+    def render(template_name, binding = nil)
+      self.class.render(template_name, binding)
+    end
 
     def resolve_scrolls
       @resolve_scrolls ||= AppScrolls::Sorter.new(scrolls_with_dependencies).tsort
@@ -37,7 +39,7 @@ module AppScrolls
 
     def scrolls_with_dependencies
       @scrolls_with_dependencies ||= scroll_classes
-      
+
       added_more = false
       for scroll in scroll_classes
         scroll.requires.each do |requirement|

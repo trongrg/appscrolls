@@ -27,8 +27,8 @@ task :run => :clean do
     Dir.chdir(dir) do
       file = File.open('template.rb', 'w')
       file.write template.compile
-      file.close  
-    
+      file.close
+
       system "rails new test_run -m template.rb #{template.args.join(' ')}"
 
       puts "\n\n cd #{dir} # look at the app"
@@ -57,7 +57,7 @@ task :new do
   unless (scrolls_dir = ENV["APPSCROLLS_DIR"]) and scrolls_dir != ""
     scrolls_dir = "scrolls"
   end
-  scroll = AppScrollsScrolls::Template.render("new_scroll", binding)
+  scroll = AppScrolls::Template.render("new_scroll", binding)
   scroll_path = "#{scrolls_dir}/#{name}.rb"
   File.open(scroll_path, "w") { |file| file << scroll }
   `open #{scroll_path}`
@@ -76,6 +76,6 @@ namespace :list do
 
   # desc "Display scrolls by exclusion"
   # task :exclusions do
-  # 
+  #
   # end
 end
