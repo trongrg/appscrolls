@@ -7,6 +7,8 @@ after_bundler do
   else
     generate "simple_form:install"
   end
+
+  gsub_file "config/initializers/simple_form.rb", "# config.form_class = :simple_form", "  config.form_class = 'simple_form horizontal_form'"
 end
 
 __END__
