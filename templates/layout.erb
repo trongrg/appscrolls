@@ -13,15 +13,31 @@
 
 # >----------------------------[ Initial Setup ]------------------------------<
 
-initializer 'generators.rb', <<-RUBY
-Rails.application.config.generators do |g|
+<%= render "helpers" %>
+
+# END MODULE
+
+require 'bundler'
+Bundler.with_clean_env do
+
+unless File.exists?('config/initializers/generators.rb')
+  initializer 'generators.rb', <<-RUBY
+  Rails.application.config.generators do |g|
+  end
+  RUBY
 end
-RUBY
 
 @scrolls = <%= resolve_scrolls.map(&:key).inspect %>
-use_git = @scrolls.include?('git')
+config ||= {}
+config.extend ConfigMapper
 
-<%= render "helpers" %>
+@current_scroll = nil
+@configs = {}
+
+define_callback :before_everything
+define_callback :after_bundler
+define_callback :after_everything
+define_callback :finally
 
 <% resolve_scrolls.each do |scroll| %>
 <%= render 'scroll', scroll.get_binding %>
@@ -38,9 +54,12 @@ execute_callbacks :before_everything
 # >-----------------------------[ Run Bundler ]-------------------------------<
 
 say_wizard "Running Bundler install. This will take a while."
-run 'bundle install'
-git_commit("bundle install") if use_git
+  run "bundle install"
+
+git_commit("bundle install") if use_git?
 
 execute_callbacks :after_bundler
 execute_callbacks :after_everything
 execute_callbacks :finally
+
+end

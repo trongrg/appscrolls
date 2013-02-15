@@ -1,87 +1,3 @@
-def scrolls; @scrolls end
-def scroll?(name); @scrolls.include?(name) end
-
-def say_custom(tag, text); say "\033[1m\033[36m" + tag.to_s.rjust(10) + "\033[0m" + "  #{text}" end
-def say_scroll(name); say "\033[1m\033[36m" + "scroll".rjust(10) + "\033[0m" + "  Running #{name} scroll..." end
-def say_wizard(text); say_custom(@current_scroll || 'wizard', text) end
-
-def ask_wizard(question)
-  ask "\033[1m\033[30m\033[46m" + (@current_scroll || "prompt").rjust(10) + "\033[0m\033[36m" + "  #{question}\033[0m"
-end
-
-def yes_wizard?(question)
-  answer = ask_wizard(question + " \033[33m(y/n)\033[0m")
-  case answer.downcase
-    when "yes", "y"
-      true
-    when "no", "n"
-      false
-    else
-      yes_wizard?(question)
-  end
-end
-
-def no_wizard?(question); !yes_wizard?(question) end
-
-def multiple_choice(question, choices)
-  say_custom('question', question)
-  values = {}
-  choices.each_with_index do |choice,i|
-    values[(i + 1).to_s] = choice[1]
-    say_custom (i + 1).to_s + ')', choice[0]
-  end
-  answer = ask_wizard("Enter your selection:") while !values.keys.include?(answer)
-  values[answer]
-end
-
-# Is the current ruby jruby?
-def jruby?
-  @jruby ||= `ruby -v` =~ /^jruby/
-end
-
-def project_name
-  @project_name ||= File.basename(File.expand_path("."))
-end
-
-@current_scroll = nil
-@configs = {}
-
-def define_callback(name)
-  var = "@#{name}_blocks"
-  instance_variable_set(var, [])
-  eigenclass = class << self; self; end
-  eigenclass.send :define_method, name.to_sym do |&block|
-    instance_variable_get(var) << [@current_scroll, block]
-  end
-end
-
-def execute_callbacks name
-  say_wizard "Running #{name} callbacks."
-  instance_variable_get("@#{name}_blocks").each do |current_scroll, block|
-    say_wizard "Running #{current_scroll} #{name} callbacks"
-    @current_scroll = current_scroll
-    block.call
-    git_commit("recipe : #{current_scroll} (#{name})") if @scrolls.include?('git')
-  end
-  @current_scroll = nil
-end
-
-define_callback :before_everything
-define_callback :after_bundler
-define_callback :after_everything
-define_callback :finally
-
-def git_commit(message)
-  `git add -A .`
-  `git commit -am "#{message}"`
-end
-
-def scroll key, &block
-  @current_scroll = key
-  yield(@configs[key] ||= {})
-end
-
-# So you can set options in config file: config.postgresql.pg_password = ''
 module ConfigMapper
   def method_missing(method, *args, &block)
     method = method.to_s
@@ -98,7 +14,6 @@ module ConfigMapper
     end
   end
 end
-config.extend ConfigMapper
 
 module Rails::Generators::Actions
   def gem_group(*names, &block)
@@ -106,7 +21,7 @@ module Rails::Generators::Actions
     log :gemfile, "group #{name}"
 
     in_root do
-      regex = /(group #{name} do((?!end).)*)\nend/m
+      regex = /(\ngroup #{name} do((?!end).)*)\nend/m
       if match = File.read("Gemfile").match(regex)
         gsub_file "Gemfile", regex , ""
         append_file "Gemfile", match[1]
@@ -153,3 +68,85 @@ module Rails::Generators::Actions
     end
   end
 end
+
+def scrolls; @scrolls end
+def scroll?(name); @scrolls.include?(name) end
+
+def say_custom(tag, text); say "\033[1m\033[36m" + tag.to_s.rjust(10) + "\033[0m" + "  #{text}" end
+def say_scroll(name); say "\033[1m\033[36m" + "scroll".rjust(10) + "\033[0m" + "  Running #{name} scroll..." end
+def say_wizard(text); say_custom(@current_scroll || 'wizard', text) end
+
+def ask_wizard(question)
+  ask "\033[1m\033[30m\033[46m" + (@current_scroll || "prompt").rjust(10) + "\033[0m\033[36m" + "  #{question}\033[0m"
+end
+
+def yes_wizard?(question)
+  answer = ask_wizard(question + " \033[33m(y/n)\033[0m")
+  case answer.downcase
+    when "yes", "y"
+      true
+    when "no", "n"
+      false
+    else
+      yes_wizard?(question)
+  end
+end
+
+def no_wizard?(question); !yes_wizard?(question) end
+
+def multiple_choice(question, choices)
+  say_custom('question', question)
+  values = {}
+  choices.each_with_index do |choice,i|
+    values[(i + 1).to_s] = choice[1]
+    say_custom (i + 1).to_s + ')', choice[0]
+  end
+  answer = ask_wizard("Enter your selection:") while !values.keys.include?(answer)
+  values[answer]
+end
+
+# Is the current ruby jruby?
+def jruby?
+  @jruby ||= `ruby -v` =~ /^jruby/
+end
+
+def project_name
+  @project_name ||= File.basename(File.expand_path("."))
+end
+
+alias :app_name :project_name
+
+def define_callback(name)
+  var = "@#{name}_blocks"
+  instance_variable_set(var, [])
+  eigenclass = class << self; self; end
+  eigenclass.send :define_method, name.to_sym do |&block|
+    instance_variable_get(var) << [@current_scroll, block]
+  end
+end
+
+def execute_callbacks name
+  say_wizard "Running #{name} callbacks."
+  instance_variable_get("@#{name}_blocks").each do |current_scroll, block|
+    say_wizard "Running #{current_scroll} #{name} callbacks"
+    @current_scroll = current_scroll
+    block.call
+    git_commit("recipe : #{current_scroll} (#{name})") if use_git?
+  end
+  @current_scroll = nil
+end
+
+def use_git?
+  @use_git ||= @scrolls.include?('git') || File.exists?('.git')
+end
+
+def git_commit(message)
+  `git add -A .`
+  `git commit -am "#{message}"`
+end
+
+def scroll key, &block
+  @current_scroll = key
+  yield(@configs[key] ||= {})
+end
+
