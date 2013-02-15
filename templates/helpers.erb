@@ -21,7 +21,7 @@ module Rails::Generators::Actions
     log :gemfile, "group #{name}"
 
     in_root do
-      regex = /(\ngroup #{name} do((?!end).)*)\nend/m
+      regex = /(\ngroup #{name} do((?!end).)*)\nend\n/m
       if match = File.read("Gemfile").match(regex)
         gsub_file "Gemfile", regex , ""
         append_file "Gemfile", match[1]
