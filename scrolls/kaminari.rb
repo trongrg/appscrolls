@@ -1,5 +1,10 @@
 gem 'kaminari'
 
+after_bundler do
+  generate "kaminari:config"
+  generate "kaminari:views#{' bootstrap' if scroll?('bootstrap_sass')}#{' -e haml' if scroll?('haml')}"
+end
+
 __END__
 
 name: Kaminari
