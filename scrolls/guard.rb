@@ -1,9 +1,8 @@
 require 'rbconfig'
-HOST_OS = RbConfig::CONFIG['host_os']
 
 if config['guard_notifications']
   gem_group :development do
-    case HOST_OS
+    case RbConfig::CONFIG['host_os']
     when /darwin/i
       gem 'rb-fsevent'
       mac_osx_version  = /(10\.\d+)(\.\d+)?/.match(`/usr/bin/sw_vers -productVersion`.chomp).captures.first.to_f
@@ -41,15 +40,15 @@ gem_group :development do
   gem 'guard-bundler'
   gem 'guard-test' if scroll? 'test_unit'
 
-  KNOWN_GUARD_SCROLLS = %w[cucumber haml less passenger puma redis resque rspec spork unicorn]
-  KNOWN_GUARD_SCROLLS.each do |scroll|
+  known_guard_scrolls = %w[cucumber haml less passenger puma redis resque rspec spork unicorn]
+  known_guard_scrolls.each do |scroll|
     gem "guard-#{scroll}" if scroll? scroll
   end
 end
 
 after_bundler do
-  KNOWN_GUARD = %w[livereload bundler spork cucumber rspec test haml less passenger puma redis resque unicorn]
-  run "bundle exec guard init #{KNOWN_GUARD.join(" ")}"
+  known_guard = %w[livereload bundler spork cucumber rspec test haml less passenger puma redis resque unicorn]
+  run "bundle exec guard init #{known_guard.join(" ")}"
 end
 
 after_everything do
