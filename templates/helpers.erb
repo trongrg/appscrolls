@@ -131,7 +131,7 @@ def execute_callbacks name
     say_wizard "Running #{current_scroll} #{name} callbacks"
     @current_scroll = current_scroll
     block.call
-    git_commit("recipe : #{current_scroll} (#{name})") if use_git?
+    git_commit("scroll: #{current_scroll} (#{name})") if use_git?
   end
   @current_scroll = nil
 end
