@@ -18,18 +18,7 @@ module AppScrolls
     }
 
     def self.generate(key, template_or_file, attributes = {})
-      if template_or_file.respond_to?(:read)
-        file = template_or_file.read
-        parts = file.split(/^__END__$/)
-        raise ArgumentError, "The scroll file must have YAML matter after an __END__" unless parts.size == 2
-        template = parts.first.strip
-        attributes = YAML.load(parts.last).inject({}) do |h,(k,v)|
-          h[k.to_sym] = v
-          h
-        end.merge!(attributes)
-      else
-        template = template_or_file
-      end
+      template, attributes = read_template(template_or_file, attributes)
 
       scroll_class = Class.new(AppScrolls::Scroll)
       scroll_class.attributes = attributes
@@ -37,6 +26,16 @@ module AppScrolls
       scroll_class.key = key
 
       scroll_class
+    end
+
+    def self.read_template(template, attributes)
+      if template.respond_to?(:read)
+        parts = template.read.split(/^__END__$/)
+        raise ArgumentError, "The scroll file must have YAML matter after an __END__" unless parts.size == 2
+        template = parts.first.strip
+        attributes = YAML.load(parts.last).inject({}) { |h,(k,v)| h.update(k.to_sym => v) }.merge!(attributes)
+      end
+      [template, attributes]
     end
 
     ATTRIBUTES.each do |setter|
