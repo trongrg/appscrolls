@@ -54,8 +54,8 @@ execute_callbacks :before_everything
 # >-----------------------------[ Run Bundler ]-------------------------------<
 
 say_wizard "Running Bundler install. This will take a while."
-  run "bundle install"
 
+run "bundle install"
 git_commit("bundle install") if use_git?
 
 execute_callbacks :after_bundler
