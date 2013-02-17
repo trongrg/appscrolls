@@ -36,5 +36,9 @@ module AppScrolls
     def self.remove_from_category(category, scroll)
       (@@categories[category.to_s] ||= []).delete(scroll.key)
     end
+
+    def self.longest_key
+      @@list.keys.max
+    end
   end
 end
