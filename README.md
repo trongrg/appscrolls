@@ -39,14 +39,16 @@ To transform an existing Rails app, you ... wait, that's not implemented yet. Bu
 The current available scrolls grouped by category:
 
 * administration: active_admin, rails_admin
-* assets: jquery, prototype
-* deployment: eycloud, eycloud_recipes_on_deploy, git, github, passenger, thin, unicorn
+* assets: bootstrap_sass, compass, jquery, prototype, sass
+* authentication: devise
+* controllers: inherited_resources
+* deployment: cfoundry, eycloud, eycloud_recipes_on_deploy, git, github, heroku, passenger, thin, unicorn
+* exception_notification: exception_notification
 * persistence: mysql, postgresql, redis, sqlite3
-* stylesheet: twitter_bootstrap
-* templating: simple_form
-* testing: capybara, cucumber, rspec, test_unit
+* templating: haml, kaminari, simple_form
+* testing: capybara, capybara_webkit, cucumber, faker, machinist, rspec, shoulda_matchers, spork, test_unit
 * worker: delayed_job, resque
-* other: env_yaml, guard, rails_basics, split
+* other: acts_as_taggable_on, env_yaml, guard, meta_search, pry, rails_basics, rvm, settingslogic, split, squeel, vcr
 
 ### Specifying Scrolls
 
