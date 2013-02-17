@@ -25,7 +25,7 @@ describe AppScrolls::Scrolls do
 
   describe '.for' do
     it 'should find for a given category' do
-      AppScrolls::Scrolls.for('test').should be_include('scroll_test')
+      AppScrolls::Scrolls.for('test').should == [scroll]
     end
   end
 end

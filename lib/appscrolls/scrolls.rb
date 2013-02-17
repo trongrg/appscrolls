@@ -8,7 +8,7 @@ module AppScrolls
       return if AppScrolls::Scrolls.const_defined?(sym)
       AppScrolls::Scrolls.const_set ActiveSupport::Inflector.camelize(scroll.key.gsub("-", "_")), scroll
       @@list[scroll.key] = scroll
-      (@@categories[scroll.category.to_s] ||= []) << scroll.key
+      (@@categories[scroll.category.to_s] ||= []) << scroll
       @@categories[scroll.category.to_s].uniq!
       scroll
     end
@@ -30,15 +30,11 @@ module AppScrolls
     end
 
     def self.for(category)
-      (@@categories[category.to_s] || []).sort
+      (@@categories[category.to_s] || []).sort {|a, b| a.key <=> b.key}
     end
 
     def self.remove_from_category(category, scroll)
-      (@@categories[category.to_s] ||= []).delete(scroll.key)
-    end
-
-    def self.longest_key
-      @@list.keys.max
+      (@@categories[category.to_s] ||= []).delete(scroll)
     end
   end
 end

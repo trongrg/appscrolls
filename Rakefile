@@ -70,7 +70,7 @@ namespace :list do
     categories = AppScrolls::Scrolls.categories.sort
     categories = (categories - ["other"]) + ["other"]
     categories.each do |category|
-      puts "#{category}: #{AppScrolls::Scrolls.for(category).join(", ")}"
+      puts "#{category}: #{AppScrolls::Scrolls.for(category).map(&:key).join(", ")}"
     end
   end
 

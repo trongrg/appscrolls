@@ -23,14 +23,18 @@ module AppScrolls
     desc "list [CATEGORY]", "list available scrolls (optionally by category)"
     def list(category = nil)
       scrolls = if category
-                  AppScrolls::Scrolls.for(category).map{|r| AppScrolls::Scroll.from_mongo(r) }
+                  AppScrolls::Scrolls.for(category)
                 else
                   AppScrolls::Scrolls.list_classes
                 end
-      max_length = scrolls.map(&:key).map(&:length).max
       scrolls.each do |scroll|
-        puts scroll.key.ljust(max_length + 2) + "# #{scroll.description}"
+        puts scroll.key.ljust(26) + "# #{scroll.description}"
       end
+    end
+
+    desc "list categories", "list all available categories"
+    def categories
+      puts AppScrolls::Scrolls.categories
     end
 
     desc "add scrolls", "add more scrolls to existing Rails app"
@@ -59,8 +63,7 @@ class AppScrollsGenerator < Rails::Generators::NamedBase
       def yellow; "\033[33m" end
 
       def scrolls_message(scrolls)
-        message = "\n\n\n"
-        message << "#{green}#{bold}Your Scrolls:#{clear} #{scrolls.join(", ")}\n\n" if scrolls.any?
+        message = "\n\n\n#{green}#{bold}Your Scrolls:#{clear} #{scrolls.join(", ")}\n\n"
         if (available_scrolls = (AppScrolls::Scrolls.list - scrolls)).any?
           message << "#{bold}#{cyan}Available Scrolls:#{clear} #{available_scrolls.join(', ')}\n\n"
         end
