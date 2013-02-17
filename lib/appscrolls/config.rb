@@ -6,7 +6,7 @@ module AppScrolls
 
     def initialize(schema)
       @questions = ActiveSupport::OrderedHash.new
-      schema.each do |hash| 
+      schema.each do |hash|
         key = hash.keys.first
         details = hash.values.first
 
@@ -20,12 +20,17 @@ module AppScrolls
       result = []
       result << "config = #{values.inspect}"
       @questions.each_pair do |key, question|
-        result << "config['#{key}'] = #{question.compile} unless config.key?('#{key}')"
+        result << "config['#{key}'] ||= #{question.compile}"
       end
       result.join("\n")
     end
 
     class Prompt
+      CONDITIONS = { 'if' => lambda {|value| "config['#{value}']"},
+                     'if_scroll' => lambda{|value| "scroll?('#{value}')"},
+                     'unless' => lambda{|value| "!config['#{value}']"},
+                     'unless_scroll' => lambda{|value| "!scroll?('#{value}')"}
+      }
       attr_reader :prompt, :details
       def initialize(details)
         @details = details
@@ -41,32 +46,14 @@ module AppScrolls
       end
 
       def conditions
-        [config_conditions, scroll_conditions].join(' && ')
-      end
-
-      def config_conditions
-        if details['if']
-          "config['#{details['if']}']"
-        elsif details['unless']
-          "!config['#{details['unless']}']"
-        else
-          'true'
-        end
-      end
-
-      def scroll_conditions
-        if details['if_scroll']
-          "scroll?('#{details['if_scroll']}')"
-        elsif details['unless_scroll']
-          "!scroll?('#{details['unless_scroll']}')"
-        else
-          'true'
-        end
+        details.keys.map do |key|
+          CONDITIONS[key].call(details[key]) if CONDITIONS[key]
+        end.compact.push("true").join(" && ")
       end
     end
 
     class TrueFalse < Prompt
-      def question 
+      def question
         "yes_wizard?(#{prompt.inspect})"
       end
     end
@@ -74,7 +61,7 @@ module AppScrolls
     class MultipleChoice < Prompt
       def question
         "multiple_choice(#{prompt.inspect}, #{@details['choices'].inspect})"
-      end 
+      end
     end
 
     QUESTION_TYPES = {

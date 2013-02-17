@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe AppScrolls::Config do
   describe '#initialize' do
-    subject{ AppScrolls::Config.new(YAML.load(@schema)) }  
+    subject{ AppScrolls::Config.new(YAML.load(@schema)) }
     it 'should add a question key for each key of the schema' do
       @schema = <<-YAML
       - test:
@@ -50,27 +50,34 @@ describe AppScrolls::Config do
             type: multiple_choice
             choices: [[ABC, abc], [DEF, def]]
             unless_scroll: awesome
+        - empty:
+            type: boolean
+            prompt: Yes or no?
         YAML
       end
 
       it 'should include all questions' do
-        lines.size.should == 4
+        lines.size.should == 5
       end
 
       it 'should handle "if"' do
-        lines[1].should be_include("config['is_true']")
+        lines[1].should include("config['is_true']")
       end
 
       it 'should handle "unless"' do
-        lines[2].should be_include("!config['is_false']")
+        lines[2].should include("!config['is_false']")
       end
 
       it 'should handle "if_scroll"' do
-        lines[2].should be_include("scroll?('awesome')")
+        lines[2].should include("scroll?('awesome')")
       end
 
       it 'should handle "unelss_scroll"' do
-        lines[3].should be_include("!scroll?('awesome')")
+        lines[3].should include("!scroll?('awesome')")
+      end
+
+      it 'should handle empty conditions' do
+        lines[4].should include("if true")
       end
     end
 
