@@ -12,30 +12,11 @@ module AppScrolls
 
     desc "new APP_NAME", "create a new Rails app"
     method_option :scrolls, :type => :array, :aliases => "-s", :desc => "List scrolls, e.g. -s resque rails_basics jquery"
-    method_option :template, :type => :boolean, :aliases => "-t", :desc => "Only display template that would be used"
     def new(name)
       if options[:scrolls]
-        run_template(name, options[:scrolls], options[:template])
+        run_template(name, options[:scrolls])
       else
-        @scrolls = []
-
-        question = "#{bold}Which scroll would you like to add/remove? #{clear}#{yellow}(blank to finish)#{clear}"
-        while (scroll = ask(scrolls_message + question)) != ''
-          if @scrolls.include?(scroll)
-            @scrolls.delete(scroll)
-            puts
-            puts "> #{yellow}Removed '#{scroll}' from template.#{clear}"
-          elsif AppScrolls::Scrolls.list.include?(scroll)
-            @scrolls << scroll
-            puts
-            puts "> #{green}Added '#{scroll}' to template.#{clear}"
-          else
-            puts
-            puts "> #{red}Invalid scroll, please try again.#{clear}"
-          end
-        end
-
-        run_template(name, @scrolls)
+        run_template(name, interactive_scrolls("#{bold}Which scroll would you like to add/remove? #{clear}#{yellow}(blank to finish)#{clear}"))
       end
     end
 
@@ -55,31 +36,18 @@ module AppScrolls
     desc "add scrolls", "add more scrolls to existing Rails app"
     method_option :scrolls, :type => :array, :aliases => "-s", :desc => "List scrolls, e.g. -s resque rails_basics jquery"
     def add
-      unless File.read("Gemfile").include?("rails")
-        puts "Not a Rails application, exit"
-        return
-      end
-      app_name = Dir.pwd.split('/').last
+      return unless rails_app?
       scrolls = options[:scrolls]
-      puts
-      puts
-      puts "#{bold}Generating and Running Template...#{clear}"
-      puts
-
+      puts "\n\n#{bold}Generating and Running Template...#{clear}\n"
       template = create_template(scrolls)
-      puts
-
       file_name = "lib/generators/app_scrolls/app_scrolls_generator.rb"
       FileUtils.mkdir_p(File.dirname(file_name))
-      file = File.open(file_name, 'w')
-      file.write template.compile
-      file.close
-      content = <<-RUBY
+      File.open(file_name, 'w') { |f| f.write template.compile }
+      inject_into_file file_name, """
 class AppScrollsGenerator < Rails::Generators::NamedBase
-  source_root File.expand_path("../templates", __FILE__)
+  source_root File.expand_path('../templates', __FILE__)
   def add
-RUBY
-      inject_into_file file_name, content, :after => "# END MODULE\n"
+""", :after => "# END MODULE\n"
       append_file file_name, "\nend\nend"
       run "rails g app_scrolls add"
     end
@@ -92,43 +60,27 @@ RUBY
       def green; "\033[32m" end
       def yellow; "\033[33m" end
 
-      def scrolls_message
+      def scrolls_message(scrolls)
         message = "\n\n\n"
-        if @scrolls && @scrolls.any?
-          message << "#{green}#{bold}Your Scrolls:#{clear} #{@scrolls.join(", ")}"
-          message << "\n\n"
+        if scrolls && scrolls.any?
+          message << "#{green}#{bold}Your Scrolls:#{clear} #{scrolls.join(", ")}\n\n"
         end
-        available_scrolls = AppScrolls::Scrolls.list - @scrolls
+        available_scrolls = AppScrolls::Scrolls.list - scrolls
         if available_scrolls.any?
-          message << "#{bold}#{cyan}Available Scrolls:#{clear} #{available_scrolls.join(', ')}"
-          message << "\n\n"
+          message << "#{bold}#{cyan}Available Scrolls:#{clear} #{available_scrolls.join(', ')}\n\n"
         end
         message
       end
 
-      def run_template(name, scrolls, display_only = false)
-        puts
-        puts
-        puts "#{bold}Generating and Running Template...#{clear}"
-        puts
-        file = Tempfile.new('template')
-        puts
+      def run_template(name, scrolls)
+        puts "\n\n#{bold}Generating and Running Template...#{clear}\n\n"
         template = create_template(scrolls)
+        file = Tempfile.new('template')
         file.write template.compile
-        file.close
-        if display_only
-          puts "Template stored to #{file.path}"
-          puts File.read(file.path)
-        else
-          system "rails new #{name} -m #{file.path} #{template.args.join(' ')}"
-        end
-      ensure
-        file.unlink
+        system "rails new #{name} -m #{file.path} #{template.args.join(' ')}"
       end
 
       def create_template(scrolls)
-        template_options = {}
-        template_options[:config_script] = File.read(options[:config_file]) if options[:config_file]
         template = AppScrolls::Template.new(scrolls)
 
         puts "Using the following scrolls:"
@@ -137,6 +89,28 @@ RUBY
           puts "  #{color}* #{scroll.new.name}#{clear}"
         end
         template
+      end
+
+      def rails_app?
+        if File.read("Gemfile").include?("rails")
+          true
+        else
+          puts "Not a Rails application"
+          false
+        end
+      end
+
+      def interactive_scrolls(question, scrolls = [])
+        if (scroll = ask(scrolls_message(scrolls) + question)) == ''
+          return scrolls
+        elsif scrolls.include?(scroll)
+          scrolls.delete(scroll)
+          puts "\n> #{yellow}Removed '#{scroll}' from template.#{clear}"
+        elsif AppScrolls::Scrolls.list.include?(scroll)
+          scrolls << scroll
+          puts "\n> #{green}Added '#{scroll}' to template.#{clear}"
+        end
+        interactive_scrolls(question, scrolls)
       end
     end
   end
