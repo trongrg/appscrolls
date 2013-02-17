@@ -10,7 +10,7 @@
 
 The App Scrolls is a magical tool to generate new Rails and modify existing Rails applications (coming) to include your favourite, powerful magic. Authentication, testing, persistence, javascript, css, deployment, and templating - there's a magical scroll for you.
 
-* [![Build Status](https://secure.travis-ci.org/drnic/appscrolls.png?branch=master)](http://travis-ci.org/drnic/appscrolls)
+* [![Build Status](https://travis-ci.org/trongrg/appscrolls.png?branch=master)](https://travis-ci.org/trongrg/appscrolls)
 * [![Dependency Status](https://gemnasium.com/trongrg/appscrolls.png)](https://gemnasium.com/trongrg/appscrolls)
 * [![Code Climate](https://codeclimate.com/github/trongrg/appscrolls.png)](https://codeclimate.com/github/trongrg/appscrolls)
 
