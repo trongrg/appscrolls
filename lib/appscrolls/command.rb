@@ -91,7 +91,7 @@ class AppScrollsGenerator < Rails::Generators::NamedBase
       end
 
       def interactive_scrolls(scrolls = [])
-        if (scroll = ask(scrolls_message(scrolls)) == '')
+        if (scroll = ask(scrolls_message(scrolls))) == ''
           return scrolls
         elsif scrolls.include?(scroll)
           scrolls.delete(scroll)

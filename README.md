@@ -1,18 +1,19 @@
 # The App Scrolls for creating and transforming Rails apps
 
 ```
-             ___               ____             ____  
+             ___               ____             ____
             / _ | ___  ___    / __/__________  / / /__
            / __ |/ _ \/ _ \  _\ \/ __/ __/ _ \/ / (_-<
           /_/ |_/ .__/ .__/ /___/\__/_/  \___/_/_/___/
-               /_/  /_/                               
+               /_/  /_/
 ```
 
 The App Scrolls is a magical tool to generate new Rails and modify existing Rails applications (coming) to include your favourite, powerful magic. Authentication, testing, persistence, javascript, css, deployment, and templating - there's a magical scroll for you.
 
-* Follow on twitter [@appscrolls][9]
 * [![Build Status](https://secure.travis-ci.org/drnic/appscrolls.png?branch=master)](http://travis-ci.org/drnic/appscrolls)
-* [![Dependency Status](https://gemnasium.com/drnic/appscrolls.png?branch=master)](https://gemnasium.com/drnic/appscrolls)
+* [![Dependency Status](https://gemnasium.com/trongrg/appscrolls.png)](https://gemnasium.com/trongrg/appscrolls)
+* [![Code Climate](https://codeclimate.com/github/trongrg/appscrolls.png)](https://codeclimate.com/github/trongrg/appscrolls)
+
 
 An example application that was built by the App Scrolls is at [https://github.com/drnic/mydemoapp][14]. The generated README shows all the scrolls that were included.
 
@@ -87,25 +88,25 @@ When deploying to [Engine Yard Cloud][6] you will need to choose:
 * `unicorn` or `passenger` for your app server
 * `mysql` or `postgresql` for your SQL DB
 
-When choosing from the following scrolls, your Engine Yard Cloud environment will be automatically upgraded/configured with Chef recipes. 
+When choosing from the following scrolls, your Engine Yard Cloud environment will be automatically upgraded/configured with Chef recipes.
 
 * `resque` - add utility instances called `resque` for workers [see [readme][15] for more information]
 * `redis` - add a utility called `redis` to have a dedicated redis DB; else it is run on your DB master or Solo instance
 * `delayed_job` - add utility instances called `delayed_job` or `dj` for workers [see [readme][16] for more information]
 
-Note: Resque is recommended instead of Delayed Job. Soon, Sidekiq will be recommended over both, and 
+Note: Resque is recommended instead of Delayed Job. Soon, Sidekiq will be recommended over both, and
 
 Please open an Issue if you want an alternate option (`puma` or `thin`; or `mongodb`)
 
 ### Heroku
 
-The App Scrolls needs a Heroku Master to support Heroku for the App Scrolls. 
+The App Scrolls needs a Heroku Master to support Heroku for the App Scrolls.
 
 There is some initial work in the [current scrolls][11] and the [archived/unsupported scrolls][12]
 
 ### CloudFoundry
 
-The App Scrolls needs a CloudFoundry Master to support CloudFoundry for the App Scrolls. 
+The App Scrolls needs a CloudFoundry Master to support CloudFoundry for the App Scrolls.
 
 ## Authoring Scrolls of Magical Mystery
 
@@ -134,9 +135,9 @@ It's really that simple. The gem has RSpec tests that automatically validate eac
 
 ## History
 
-This project is an old fashioned fork of [Michael Bleigh][5]'s [Rails Wizard][4]. A new name, new project, and new purpose. 
+This project is an old fashioned fork of [Michael Bleigh][5]'s [Rails Wizard][4]. A new name, new project, and new purpose.
 
-This project wouldn't exist without Michael having created [Rails Wizard][4] during Rails Rumble and maintaining and upgrading it for a long time. Sadly support dropped off, several recipes did not work with Rails 3.1+, 
+This project wouldn't exist without Michael having created [Rails Wizard][4] during Rails Rumble and maintaining and upgrading it for a long time. Sadly support dropped off, several recipes did not work with Rails 3.1+,
 
 [Dr Nic][7] originally worked on [Rails Wizard][4] to provide [Engine Yard Cloud][6] support, his employer and his favourite hosting platform. He also merged in a lot of recipes from other forks, and added new recipes for modern projects.
 
