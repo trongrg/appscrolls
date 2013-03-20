@@ -1,6 +1,10 @@
 heroku_name = app_name.gsub('_','')
 
-inject_into_file 'Gemfile', "\nruby '1.9.3'\n", :after => "source 'https://rubygems.org'"
+if !defined?(ruby_version)
+  ruby_version = config['heroku_ruby_version'].present? ? config['heroku_ruby_version'] : '2.0.0'
+end
+
+inject_into_file 'Gemfile', "\nruby '#{ruby_version}'\n", :after => "source 'https://rubygems.org'"
 
 after_everything do
   if config['create']
@@ -40,7 +44,7 @@ __END__
 name: Heroku
 description: Create Heroku application and instantly deploy.
 author: mbleigh
-run_after: [git]
+run_after: [git, rvm]
 exclusive: deployment
 category: deployment
 tags: [provider]
@@ -60,5 +64,10 @@ config:
       if: create
   - deploy:
       prompt: "Deploy immediately?"
-      type: boolean 
+      type: boolean
       if: create
+  - heroku_ruby_version:
+      prompt: "Specify ruby version for heroku app (default to 2.0.0):"
+      type: string
+      if: create
+      unless: ruby_version
