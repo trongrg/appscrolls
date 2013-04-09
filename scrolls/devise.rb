@@ -44,4 +44,4 @@ author: mbleigh
 category: authentication
 exclusive: authentication
 
-run_after: [haml, rvm, simple_form]
+run_after: [haml, rvm, simple_form, active_admin]
