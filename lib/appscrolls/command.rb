@@ -17,6 +17,7 @@ module AppScrolls
       template = create_template(scrolls)
       file = Tempfile.new('template')
       file.write template.compile
+      file.close
       system "rails new #{name} -m #{file.path} #{template.args.join(' ')}"
     end
 
